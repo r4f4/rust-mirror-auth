@@ -80,17 +80,17 @@ impl TokenInterface for ImplTokenInterface {
             .header("User-Agent", "rust-mirror-auth")
             .send()
             .await
-            .map_err(|e| MirrorError::new(&format!("[get_auth_json] api call {} {}", url, e)))?;
+            .map_err(|e| MirrorError::new(format!("[get_auth_json] api call {} {}", url, e)))?;
 
         if res.status() != StatusCode::OK {
-            return Err(MirrorError::new(&format!(
+            return Err(MirrorError::new(format!(
                 "[get_auth_json] api call {} {}",
                 url,
                 res.status()
             )));
         }
         res.text().await.map_err(|e| {
-            MirrorError::new(&format!(
+            MirrorError::new(format!(
                 "[get_auth_json] reading body {}",
                 e.to_string().to_lowercase()
             ))
@@ -99,7 +99,7 @@ impl TokenInterface for ImplTokenInterface {
 
     async fn read_file<P: AsRef<Path> + Send>(&self, file: P) -> Result<String, MirrorError> {
         fs::read_to_string(file)
-            .map_err(|e| MirrorError::new(&format!("[read_file] {}", e.to_string().to_lowercase())))
+            .map_err(|e| MirrorError::new(format!("[read_file] {}", e.to_string().to_lowercase())))
     }
 }
 
@@ -119,13 +119,13 @@ pub async fn get_token<T: TokenInterface>(
     let auth = parse_json_creds(creds.clone(), name.clone())?;
     // decode to base64
     let res_bytes = general_purpose::STANDARD.decode(&auth).map_err(|e| {
-        MirrorError::new(&format!(
+        MirrorError::new(format!(
             "[get_token] base64 decode {}",
             e.to_string().to_lowercase()
         ))
     })?;
     let s = str::from_utf8(&res_bytes).map_err(|e| {
-        MirrorError::new(&format!(
+        MirrorError::new(format!(
             "[get_token] get auth json {}",
             e.to_string().to_lowercase()
         ))
@@ -172,7 +172,7 @@ pub async fn get_token<T: TokenInterface>(
 pub fn parse_json_creds(data: String, mode: String) -> Result<String, MirrorError> {
     // parse the string of data into serde_json::Root.
     let creds: Root = serde_json::from_str(&data).map_err(|e| {
-        MirrorError::new(&format!(
+        MirrorError::new(format!(
             "[parse_json_creds] {}",
             e.to_string().to_lowercase()
         ))
@@ -181,7 +181,7 @@ pub fn parse_json_creds(data: String, mode: String) -> Result<String, MirrorErro
         .auths
         .get(&mode)
         .map(|p| p.auth.clone())
-        .ok_or(MirrorError::new(&format!(
+        .ok_or(MirrorError::new(format!(
             "[parse_json_creds] could not find key for {}",
             mode
         )))
@@ -191,7 +191,7 @@ pub fn parse_json_creds(data: String, mode: String) -> Result<String, MirrorErro
 pub fn parse_json_token(data: String) -> Result<String, MirrorError> {
     // parse the string of data into serde_json::Token.
     let root: Token = serde_json::from_str(&data).map_err(|e| {
-        MirrorError::new(&format!(
+        MirrorError::new(format!(
             "[parse_json_token] {}",
             e.to_string().to_lowercase()
         ))

@@ -694,7 +694,7 @@ dependencies = [
 
 [[package]]
 name = "mirror-auth"
-version = "0.9.0"
+version = "0.9.1"
 dependencies = [
  "async-trait",
  "base64",
@@ -713,8 +713,8 @@ dependencies = [
 
 [[package]]
 name = "mirror-error"
-version = "0.1.0"
-source = "git+https://github.com/lmzuccarelli/rust-mirror-error?branch=main#9d9c5dd348f3ab9168d20e266c5ec3b07f7f3851"
+version = "0.2.0"
+source = "git+https://github.com/lmzuccarelli/rust-mirror-error?branch=main#3cc96d7c5e86c65ef40ef24165cb43b7cba10cdc"
 
 [[package]]
 name = "mockito"
